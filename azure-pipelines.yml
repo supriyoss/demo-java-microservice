@@ -37,7 +37,7 @@ stages:
   jobs:
 
   - deployment: Deploy-to-VM
-    environment: dev
+    environment: Dev-Test-VM
 
     strategy:
       runOnce:
@@ -49,14 +49,14 @@ stages:
 
           - task: CopyFilesOverSSH@0
             inputs:
-              sshEndpoint: 'vm-ssh'
+              sshEndpoint: 'Dev-Test-VM-Connection'
               sourceFolder: '$(Pipeline.Workspace)/jarArtifact'
               contents: '*.jar'
               targetFolder: '$(vmDeployPath)'
 
           - task: SSH@0
             inputs:
-              sshEndpoint: 'vm-ssh'
+              sshEndpoint: 'Dev-Test-VM-Connection'
               runOptions: 'commands'
               commands: |
                 sudo pkill -f java || true
