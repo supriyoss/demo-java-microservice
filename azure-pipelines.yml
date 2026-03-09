@@ -5,7 +5,7 @@ trigger:
 pr: none
 
 pool:
-  vmImage: Default
+  name: Default
 
 variables:
   vmDeployPath: "/opt/demo-java-microservice"
