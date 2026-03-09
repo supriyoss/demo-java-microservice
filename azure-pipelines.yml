@@ -59,6 +59,13 @@ stages:
               sshEndpoint: 'Dev-Test-VM-Connection'
               runOptions: 'commands'
               commands: |
+                sudo systemctl restart java-microservice
+
+          - task: SSH@0
+            inputs:
+              sshEndpoint: 'Dev-Test-VM-Connection'
+              runOptions: 'commands'
+              commands: |
                 sudo pkill -f java || true
                 cd $(vmDeployPath)
                 nohup java -jar *.jar > app.log 2>&1 &
