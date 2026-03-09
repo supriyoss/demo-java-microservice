@@ -36,7 +36,7 @@ stages:
   dependsOn: Build
   jobs:
 
-  - deployment: Deploy-to-VM
+  - deployment: DeployVM
     environment: Dev-Test-VM
 
     strategy:
