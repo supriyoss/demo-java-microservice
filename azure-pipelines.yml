@@ -59,7 +59,7 @@ stages:
               sshEndpoint: 'Dev-Test-VM-Connection'
               runOptions: 'commands'
               commands: |
-                sudo systemctl restart java-microservice
+                sudo systemctl restart demo-java-microservice
 
           - task: SSH@0
             inputs:
