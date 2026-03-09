@@ -1,0 +1,64 @@
+trigger:
+- main
+
+# Allow manual execution
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  vmDeployPath: "/opt/demo-java-microservice"
+  serviceName: "demo-java-microservice-app"
+
+stages:
+
+# ---------- BUILD STAGE ----------
+- stage: Build
+  displayName: Build Java Service
+  jobs:
+  - job: BuildJar
+    steps:
+
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'clean package'
+        publishJUnitResults: false
+
+    - publish: $(System.DefaultWorkingDirectory)/target
+      artifact: jarArtifact
+
+
+# ---------- DEPLOY STAGE ----------
+- stage: Deploy
+  displayName: Deploy to Azure VM
+  dependsOn: Build
+  jobs:
+
+  - deployment: Deploy-to-VM
+    environment: dev
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - download: current
+            artifact: jarArtifact
+
+          - task: CopyFilesOverSSH@0
+            inputs:
+              sshEndpoint: 'vm-ssh'
+              sourceFolder: '$(Pipeline.Workspace)/jarArtifact'
+              contents: '*.jar'
+              targetFolder: '$(vmDeployPath)'
+
+          - task: SSH@0
+            inputs:
+              sshEndpoint: 'vm-ssh'
+              runOptions: 'commands'
+              commands: |
+                sudo pkill -f java || true
+                cd $(vmDeployPath)
+                nohup java -jar *.jar > app.log 2>&1 &
