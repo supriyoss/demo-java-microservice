@@ -1,5 +1,4 @@
-trigger:
-- main
+trigger: none
 
 # Allow manual execution
 pr: none
