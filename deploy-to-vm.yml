@@ -53,7 +53,7 @@ stages:
               contents: '*.jar'
               targetFolder: '$(vmDeployPath)'
 
-          - task: RestartJavaService
+          - task: SSH@0
             inputs:
               sshEndpoint: 'Dev-Test-VM-Connection'
               runOptions: 'commands'
