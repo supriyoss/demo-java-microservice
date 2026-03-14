@@ -55,4 +55,4 @@ stages:
         ingress: 'external'
         resourceGroup: '$(resourceGroup)'
         containerAppEnvironment: 'java-microservice-env'
-        location: 'Central India'
+        location: 'centralindia'
