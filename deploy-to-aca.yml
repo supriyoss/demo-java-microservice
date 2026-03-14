@@ -5,7 +5,7 @@ pool:
 
 variables:
   imageName: supriyoss18/demo-java-microservice-on-azure
-  dockerRegistryServiceConnection: Dockerhub-connect
+  dockerRegistryServiceConnection: 'Dockerhub-connect'
   dockerfilePath: Dockerfile
   tag: $(Build.BuildId)
   containerAppName: java-app
@@ -32,6 +32,7 @@ stages:
         repository: $(imageName)
         dockerfile: $(dockerfilePath)
         tags: $(tag)
+        containerRegistry: $(dockerRegistryServiceConnection)
 
 # ---------------- DEPLOY STAGE ----------------
 - stage: Deploy
