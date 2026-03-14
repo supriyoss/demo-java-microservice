@@ -25,7 +25,7 @@ To run the application locally:
 java -jar target/demo-java-microservice-0.0.1-SNAPSHOT.jar
 ```
 
-The application will start on port 8080 by default.
+The application will start on port 3500 by default.
 
 ## Deployment on Azure VM
 
@@ -35,7 +35,7 @@ The application will start on port 8080 by default.
 4. Run the JAR with `java -jar demo-java-microservice-0.0.1-SNAPSHOT.jar`.
 5. Optionally, configure it to run as a service or use a process manager like systemd.
 
-Make sure the VM's firewall allows traffic on port 8080.
+Make sure the VM's firewall allows traffic on port 3500.
 
 ## Deployment on Azure Container Apps
 
