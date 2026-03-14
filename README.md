@@ -35,3 +35,31 @@ The application will start on port 8080 by default.
 5. Optionally, configure it to run as a service or use a process manager like systemd.
 
 Make sure the VM's firewall allows traffic on port 8080.
+
+## Deployment on Azure Container Apps
+
+The application can be deployed to Azure Container Apps using the provided Azure DevOps pipeline (`deploy-to-aca.yml`).
+
+### Automated Deployment
+
+1. Ensure the Azure DevOps pipeline is configured with the necessary service connections:
+   - Docker Hub connection (`Dockerhub-connect`)
+   - Azure service connection (`azure-sp`)
+
+2. Trigger the pipeline manually or set up triggers as needed.
+
+3. The pipeline will:
+   - Build the application using Maven
+   - Create a Docker image and push it to Docker Hub
+   - Deploy the container to Azure Container Apps
+
+### Container App Configuration
+
+- **Container App Name**: java-app
+- **Resource Group**: techish-app-rg
+- **Environment**: java-microservice-env
+- **Location**: Central India
+- **Target Port**: 3500
+- **Ingress**: External
+
+The application will be accessible via the Azure Container Apps URL once deployed.
