@@ -2,9 +2,10 @@
 
 This is a simple Java microservice built with Spring Boot that exposes an API endpoint.
 
-## API Endpoint
+## API Endpoints
 
-- GET /hello - Returns "Hello World"
+- GET / - Returns a "Hello World" homepage (HTML)
+- GET /hello - Returns "Hello World" as JSON
 
 ## Building the Application
 
