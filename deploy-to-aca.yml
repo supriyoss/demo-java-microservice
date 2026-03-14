@@ -1,12 +1,15 @@
 trigger: none
 
+pool:
+  name: Default
+
 variables:
-  imageRepository: myapp
-  containerRegistry: myacr.azurecr.io
+  imageName: supriyoss18/demo-java-microservice-on-azure
+  dockerRegistryServiceConnection: Dockerhub-connect
   dockerfilePath: Dockerfile
   tag: $(Build.BuildId)
-  containerAppName: my-container-app
-  resourceGroup: my-resource-group
+  containerAppName: java-app
+  resourceGroup: techish-app-rg
 
 stages:
 
@@ -16,9 +19,6 @@ stages:
   jobs:
   - job: BuildJob
     displayName: Build and Push Image
-    pool:
-      vmImage: ubuntu-latest
-
     steps:
     - checkout: self
 
@@ -26,11 +26,9 @@ stages:
       displayName: Build and Push Image
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: $(imageName)
         dockerfile: $(dockerfilePath)
-        containerRegistry: my-acr-service-connection
-        tags: |
-          $(tag)
+        tags: $(tag)
 
 # ---------------- DEPLOY STAGE ----------------
 - stage: Deploy
@@ -41,18 +39,15 @@ stages:
   jobs:
   - job: DeployJob
     displayName: Deploy Container App
-    pool:
-      vmImage: ubuntu-latest
 
     steps:
-    - task: AzureCLI@2
-      displayName: Update Container App
+    - task: AzureContainerApps@1
+      displayName: Deploy new container version
       inputs:
-        azureSubscription: my-azure-service-connection
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          az containerapp update \
-            --name $(containerAppName) \
-            --resource-group $(resourceGroup) \
-            --image $(containerRegistry)/$(imageRepository):$(tag)
+        azureSubscription: 'azure-sp'
+        imageToDeploy: '$(imageName):$(tag)'
+        containerAppName: '$(containerAppName)'
+        targetPort: '3500'
+        ingress: 'external'
+        resourceGroup: '$(resourceGroup)'
+        containerAppEnvironment: 'java-microservice-env'
