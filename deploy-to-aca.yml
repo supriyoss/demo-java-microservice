@@ -8,8 +8,8 @@ variables:
   dockerRegistryServiceConnection: 'Dockerhub-connect'
   dockerfilePath: Dockerfile
   tag: $(Build.BuildId)
-  containerAppName: java-app
-  resourceGroup: techish-app-rg
+  containerAppName: 'java-app'
+  resourceGroup: 'techish-app-rg'
 
 stages:
 
@@ -55,3 +55,4 @@ stages:
         ingress: 'external'
         resourceGroup: '$(resourceGroup)'
         containerAppEnvironment: 'java-microservice-env'
+        location: 'Central India'
