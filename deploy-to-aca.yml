@@ -1,0 +1,58 @@
+trigger: none
+
+variables:
+  imageRepository: myapp
+  containerRegistry: myacr.azurecr.io
+  dockerfilePath: Dockerfile
+  tag: $(Build.BuildId)
+  containerAppName: my-container-app
+  resourceGroup: my-resource-group
+
+stages:
+
+# ---------------- BUILD STAGE ----------------
+- stage: Build
+  displayName: Build Image
+  jobs:
+  - job: BuildJob
+    displayName: Build and Push Image
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - checkout: self
+
+    - task: Docker@2
+      displayName: Build and Push Image
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: my-acr-service-connection
+        tags: |
+          $(tag)
+
+# ---------------- DEPLOY STAGE ----------------
+- stage: Deploy
+  displayName: Deploy to Azure Container Apps
+  dependsOn: Build
+  condition: succeeded()
+
+  jobs:
+  - job: DeployJob
+    displayName: Deploy Container App
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - task: AzureCLI@2
+      displayName: Update Container App
+      inputs:
+        azureSubscription: my-azure-service-connection
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az containerapp update \
+            --name $(containerAppName) \
+            --resource-group $(resourceGroup) \
+            --image $(containerRegistry)/$(imageRepository):$(tag)
